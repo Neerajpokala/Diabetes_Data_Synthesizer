@@ -179,7 +179,6 @@ def main():
     vldl = st.text_input("VLDL")
     bmi = st.text_input("BMI")
     bgl = st.text_input("BGL")
-    date_type = type(date)
     size = st.number_input("Sample Size", min_value=1, max_value=1000, step=1, value=100)
 
     input_data = {
@@ -202,13 +201,18 @@ def main():
     def generate_data(input_data, size):
         try:
             # Convert Date string to datetime object
-            input_data['Date'] = datetime.strptime(input_data['Date'], '%Y-%m-%d')
+            if not isinstance(input_data['Date'], datetime):
+                input_data['Date'] = datetime.strptime(input_data['Date'], '%Y-%m-%d')
             
             # Generate synthetic data
             data = history_generator(current_data=input_data, size=size)
+            if data is None:
+                st.error("Failed to generate synthetic data. Please check your input parameters.")
+                return None
             return data
         except Exception as e:
-            st.error(f"An error occurred: {e}")
+            st.error(f"An error occurred while generating synthetic data: {e}")
+            return None
 
     # Button to generate data
     if st.button("Generate Data"):
