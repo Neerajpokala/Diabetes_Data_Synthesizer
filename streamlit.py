@@ -193,8 +193,8 @@ def main():
     # Function to generate synthetic data
     def generate_data(input_data, size):
         try:
-            # Check if Date field is already a datetime object
-            if not isinstance(input_data['Date'], datetime):
+            # Check if Date field is a string
+            if isinstance(input_data['Date'], str):
                 # Convert Date string to datetime object
                 input_data['Date'] = datetime.strptime(input_data['Date'], '%Y-%m-%d')
             
