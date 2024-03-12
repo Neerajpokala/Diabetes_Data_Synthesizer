@@ -197,6 +197,7 @@ def main():
             if isinstance(input_data['Date'], str):
                 # Convert Date string to datetime object
                 input_data['Date'] = datetime.strptime(input_data['Date'], '%Y-%m-%d')
+                print(type(date))
             
             # Generate synthetic data
             data = history_generator(current_data=input_data, size=size)
