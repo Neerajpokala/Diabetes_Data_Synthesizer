@@ -1,9 +1,8 @@
 import streamlit as st
-
-import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from scipy.stats import truncnorm
+import numpy as np
 import random
 import json
 
@@ -26,11 +25,9 @@ def get_samples(lower_bound:float, upper_bound:float, mean:float, sd:float, size
         `np.ndarray`: array of generated data
     """    
     try:
-        # (lower_bound, upper_bound) = (upper_bound, lower_bound) if lower_bound>upper_bound else (lower_bound, upper_bound)
         z_score_low = (lower_bound - mean) /sd
         z_score_up = (upper_bound - mean) /sd
         data = truncnorm.rvs(a=z_score_low, b=z_score_up, loc=mean, scale=sd, size=size)
-        # data.sort()
         return data
     except Exception as e:
         raise e
@@ -60,7 +57,6 @@ def generate_data(reference: dict, parameter: str, stage: str, thresh: float, si
                 s1_ub = mean + 2*std if ((mean + 2*std) < thresh) else thresh
             else:
                 s1_ub = thresh
-            print(f"1:::{parameter} - mean: {mean}, std: {std}, upper limit: {s1_ub}, lower limit: {s1_lb}, thresh: {thresh}")
             stage1_values = get_samples(lower_bound=s1_lb, upper_bound=s1_ub, mean=mean, sd=std, size=size)
         #----------------------------------------------
         if stage in ["Diabetes", "Pre-Diabetes"]:
@@ -71,7 +67,6 @@ def generate_data(reference: dict, parameter: str, stage: str, thresh: float, si
                 s2_ub = mean + 2*std if ((mean + 2*std) < thresh) else thresh
             else:
                 s2_ub = thresh
-            print(f"2:::{parameter} - mean: {mean}, std: {std}, upper limit: {s2_ub}, lower limit: {s2_lb}, thresh: {thresh}")
             stage2_values = get_samples(lower_bound=s2_lb, upper_bound=s2_ub, mean=mean, sd=std, size=size)
         #------------------------------------------------
         if stage in ["Diabetes"]:
@@ -79,7 +74,6 @@ def generate_data(reference: dict, parameter: str, stage: str, thresh: float, si
             std = reference['STAGE-THREE'][parameter]['std']
             s3_lb = s2_ub - 2*std if ((mean - 2*std) < (s2_ub - 2*std)) else mean - 2*std
             s3_ub = mean + 0.8*std if stage != "Diabetes" else thresh
-            print(f"3:::{parameter} - mean: {mean}, std: {std}, upper limit: {s3_ub}, lower limit: {s3_lb}, thresh: {thresh}")
             stage3_values = get_samples(lower_bound=s3_lb, upper_bound=s3_ub, mean=mean, sd=std, size=size)
 
         if stage=="Diabetes":
@@ -130,8 +124,6 @@ def history_generator(current_data: dict, size: int) -> pd.DataFrame:
         else:
             path = 'reference\\old.json'
         
-        print(f'Age is {age}, chosen path {path}')
-
         # fetching confidence intervals of all parameters per stage
         with open(path) as f:
             dictt = json.load(f)
@@ -162,7 +154,7 @@ def history_generator(current_data: dict, size: int) -> pd.DataFrame:
 # Streamlit app
 def main():
     # Title of the app
-    st.title('Synthetic Health Data Generator')
+    st.markdown("<h1 style='text-align: center; color: black;'>Synthetic Health Data Generator</h1>", unsafe_allow_html=True)
 
     # Get user input for parameters
     st.subheader("Input Parameters")
@@ -179,6 +171,7 @@ def main():
     vldl = st.text_input("VLDL")
     bmi = st.text_input("BMI")
     bgl = st.text_input("BGL")
+
     size = st.number_input("Sample Size", min_value=1, max_value=1000, step=1, value=100)
 
     input_data = {
@@ -200,15 +193,18 @@ def main():
     # Function to generate synthetic data
     def generate_data(input_data, size):
         try:
-            # Convert Date string to datetime object
+            # Check if Date field is already a datetime object
             if not isinstance(input_data['Date'], datetime):
+                # Convert Date string to datetime object
                 input_data['Date'] = datetime.strptime(input_data['Date'], '%Y-%m-%d')
             
             # Generate synthetic data
             data = history_generator(current_data=input_data, size=size)
+            
             if data is None:
                 st.error("Failed to generate synthetic data. Please check your input parameters.")
                 return None
+            
             return data
         except Exception as e:
             st.error(f"An error occurred while generating synthetic data: {e}")
@@ -217,11 +213,12 @@ def main():
     # Button to generate data
     if st.button("Generate Data"):
         data = generate_data(input_data, size)
-        st.dataframe(data)
+        if data is not None:
+            st.dataframe(data)
 
-        # Download link for the generated CSV file
-        csv = data.to_csv(index=False)
-        st.download_button("Download CSV", csv, "synthetic_data.csv", "text/csv")
+            # Download link for the generated CSV file
+            csv = data.to_csv(index=False)
+            st.download_button("Download CSV", csv, "synthetic_data.csv", "text/csv")
 
 if __name__ == "__main__":
     main()
