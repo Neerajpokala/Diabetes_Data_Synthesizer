@@ -198,16 +198,24 @@ def main():
     }
 
     # Function to generate synthetic data
-    def generate_data(input_data, size):
-        try:
+def generate_data(input_data, size):
+    try:
+        # Check if Date field is already a datetime object
+        if not isinstance(input_data['Date'], datetime):
             # Convert Date string to datetime object
             input_data['Date'] = datetime.strptime(input_data['Date'], '%Y-%m-%d')
-            
-            # Generate synthetic data
-            data = history_generator(current_data=input_data, size=size)
-            return data
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+        
+        # Generate synthetic data
+        data = history_generator(current_data=input_data, size=size)
+        
+        if data is None:
+            st.error("Failed to generate synthetic data. Please check your input parameters.")
+            return None
+        
+        return data
+    except Exception as e:
+        st.error(f"An error occurred while generating synthetic data: {e}")
+        return None
 
     # Button to generate data
     if st.button("Generate Data"):
