@@ -1,0 +1,40 @@
+{
+    "STAGE-ONE": {
+        "Urea": {"mean": 15, "std": 5},
+        "Cr": {"mean": 0.76, "std": 0.09},
+        "HbA1c": {"mean": 5.25, "std": 0.48},
+        "Chol": {"mean": 104, "std": 19.99},
+        "TG": {"mean": 80.6, "std": 45.2},
+        "HDL": {"mean": 55.2, "std": 19.6},
+        "LDL": {"mean": 100.2, "std": 29},
+        "VLDL": {"mean": 16.04, "std": 1.13},
+        "BMI": {"mean": 21.4, "std": 5.1},
+        "BGL": {"mean": 92.79, "std": 11.53}
+    },
+
+    "STAGE-TWO": {
+        "Urea": {"mean": 17.87, "std": 3.62},
+        "Cr": {"mean": 0.98, "std": 0.15},
+        "HbA1c": {"mean": 6.31, "std": 1.18},
+        "Chol": {"mean": 102.0, "std": 20.34},
+        "TG": {"mean": 87.45, "std": 49.85},
+        "HDL": {"mean": 51.75, "std": 20.3},
+        "LDL": {"mean": 105.5, "std": 31.4},
+        "VLDL": {"mean": 20.8, "std": 3.06},
+        "BMI": {"mean": 23.65, "std": 6.6},
+        "BGL": {"mean": 117.38, "std": 39.72}
+    },
+    
+    "STAGE-THREE": {
+        "Urea": {"mean": 20.74, "std": 2.25},
+        "Cr": {"mean": 1.2, "std": 0.2},
+        "HbA1c": {"mean": 7.37, "std": 1.89},
+        "Chol": {"mean": 100, "std": 20.7},
+        "TG": {"mean": 94.3, "std": 54.5},
+        "HDL": {"mean": 48.3, "std": 21},
+        "LDL": {"mean": 110.8, "std": 33.8},
+        "VLDL": {"mean": 30, "std": 5},
+        "BMI": {"mean": 25.9, "std": 8.1},
+        "BGL": {"mean": 141.98, "std": 67.92}
+    }
+}
