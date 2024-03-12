@@ -179,7 +179,7 @@ def main():
     vldl = st.text_input("VLDL")
     bmi = st.text_input("BMI")
     bgl = st.text_input("BGL")
-
+    print(date, type(date))
     size = st.number_input("Sample Size", min_value=1, max_value=1000, step=1, value=100)
 
     input_data = {
